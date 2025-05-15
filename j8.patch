@@ -1,0 +1,269 @@
+Subject: [PATCH] fix
+---
+Index: .gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+--- /dev/null	(revision 054aea5680a1add921a10f545cbcc91258a0b381)
++++ b/.gitignore	(revision 054aea5680a1add921a10f545cbcc91258a0b381)
+@@ -0,0 +1,4 @@
++/prizm_db/*
++.idea
++target
++logs
+\ No newline at end of file
+Index: dependency-reduced-pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/dependency-reduced-pom.xml b/dependency-reduced-pom.xml
+--- a/dependency-reduced-pom.xml	(revision c0f2ba206e1df9970d6c0841a3737ec76732b496)
++++ b/dependency-reduced-pom.xml	(revision 054aea5680a1add921a10f545cbcc91258a0b381)
+@@ -82,9 +82,9 @@
+     </plugins>
+   </reporting>
+   <properties>
+-    <maven.compiler.target>17</maven.compiler.target>
+-    <maven.compiler.source>17</maven.compiler.source>
++    <maven.compiler.source>1.8</maven.compiler.source>
+     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
++    <maven.compiler.target>1.8</maven.compiler.target>
+   </properties>
+ </project>
+ 
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/pom.xml b/pom.xml
+--- a/pom.xml	(revision c0f2ba206e1df9970d6c0841a3737ec76732b496)
++++ b/pom.xml	(revision 054aea5680a1add921a10f545cbcc91258a0b381)
+@@ -12,8 +12,8 @@
+ 
+     <properties>
+         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+-        <maven.compiler.source>17</maven.compiler.source>
+-        <maven.compiler.target>17</maven.compiler.target>
++        <maven.compiler.source>1.8</maven.compiler.source>
++        <maven.compiler.target>1.8</maven.compiler.target>
+     </properties>
+ 
+     <dependencies>
+@@ -176,18 +176,18 @@
+         
+          <!-- APACHE FTP CLIENT -->
+        <!-- https://mvnrepository.com/artifact/commons-net/commons-net -->
+-        <dependency>
+-            <groupId>commons-net</groupId>
+-            <artifactId>commons-net</artifactId>
+-            <version>3.6</version>
+-        </dependency>
+-        <!-- new javafx dep -->
+-         <dependency>
+-            <groupId>org.openjfx</groupId>
+-            <artifactId>javafx-web</artifactId>
+-            <version>17.0.2</version>
+-            <type>jar</type>
+-        </dependency>
++<!--        <dependency>-->
++<!--            <groupId>commons-net</groupId>-->
++<!--            <artifactId>commons-net</artifactId>-->
++<!--            <version>3.6</version>-->
++<!--        </dependency>-->
++<!--        &lt;!&ndash; new javafx dep &ndash;&gt;-->
++<!--         <dependency>-->
++<!--            <groupId>org.openjfx</groupId>-->
++<!--            <artifactId>javafx-web</artifactId>-->
++<!--            <version>17.0.2</version>-->
++<!--            <type>jar</type>-->
++<!--        </dependency>-->
+         <!-- gsonmaper for loterry -->
+ 
+         
+Index: src/main/java/prizm/ParaEngine.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/prizm/ParaEngine.java b/src/main/java/prizm/ParaEngine.java
+--- a/src/main/java/prizm/ParaEngine.java	(revision c0f2ba206e1df9970d6c0841a3737ec76732b496)
++++ b/src/main/java/prizm/ParaEngine.java	(revision 054aea5680a1add921a10f545cbcc91258a0b381)
+@@ -1674,18 +1674,7 @@
+             try (PreparedStatement values = conn.prepareStatement("set @value1 = ?")) {
+                 values.setLong(1, ID);
+                 values.executeUpdate();
+-            try (PreparedStatement statement = conn.prepareStatement("""
+-                                                                     WITH LINK(ID, PARENT_ID, LEVEL) AS (
+-                                                                         SELECT ID, PARENT_ID, 0 FROM PARA WHERE ID = @value1
+-                                                                         UNION ALL
+-                                                                         SELECT PARA.ID, PARA.PARENT_ID, LEVEL + 1
+-                                                                         FROM LINK INNER JOIN PARA ON LINK.PARENT_ID = PARA.ID AND LINK.LEVEL < 88
+-                                                                      )
+-                                                                      select
+-                                                                        link.id,
+-                                                                        link.parent_id,
+-                                                                        link.level
+-                                                                     from link""");
++            try (PreparedStatement statement = conn.prepareStatement("WITH LINK(ID, PARENT_ID, LEVEL) AS ( SELECT ID, PARENT_ID, 0 FROM PARA WHERE ID = @value1 UNION ALL SELECT PARA.ID, PARA.PARENT_ID, LEVEL + 1 FROM LINK INNER JOIN PARA ON LINK.PARENT_ID = PARA.ID AND LINK.LEVEL < 88 ) select link.id, link.parent_id, link.level from link");
+                     ResultSet rs = statement.executeQuery()) {
+                 while (rs.next()) {
+                     HeapStore item = new HeapStore(rs.getLong(1), rs.getLong(2), rs.getLong(3));
+Index: src/main/java/prizm/http/GetAccount.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/prizm/http/GetAccount.java b/src/main/java/prizm/http/GetAccount.java
+--- a/src/main/java/prizm/http/GetAccount.java	(revision c0f2ba206e1df9970d6c0841a3737ec76732b496)
++++ b/src/main/java/prizm/http/GetAccount.java	(revision 054aea5680a1add921a10f545cbcc91258a0b381)
+@@ -85,9 +85,9 @@
+                 response.put("description", Convert.nullToEmpty(accountInfo.getDescription()));
+             }
+             _mapACC.put(accId, response);
+-            if (_mapACC.size() > _maxHMsizeAcc) {
+-                _mapACC.remove(_mapACC.firstEntry().getKey());
+-            }
++//            if (_mapACC.size() > _maxHMsizeAcc) {
++//                _mapACC.remove(_mapACC.firstEntry().getKey());
++//            }
+             return response;
+         } finally {
+             _zanatsetACC.remove(accId);
+Index: src/main/java/prizm/http/GetAccountLedger.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/prizm/http/GetAccountLedger.java b/src/main/java/prizm/http/GetAccountLedger.java
+--- a/src/main/java/prizm/http/GetAccountLedger.java	(revision c0f2ba206e1df9970d6c0841a3737ec76732b496)
++++ b/src/main/java/prizm/http/GetAccountLedger.java	(revision 054aea5680a1add921a10f545cbcc91258a0b381)
+@@ -300,9 +300,9 @@
+         JSONObject response = new JSONObject();
+         response.put("entries", responseEntries);
+         _mapALedg.put(accountId, response);
+-            if (_mapALedg.size() > accountId) {
+-                _mapALedg.remove(_mapALedg.firstEntry().getKey());
+-            }
++//            if (_mapALedg.size() > accountId) {
++//                _mapALedg.remove(_mapALedg.firstEntry().getKey());
++//            }
+         return response;
+         }finally{
+             _zanatsetALedg.remove(accountId);    
+Index: src/main/java/prizm/http/GetBlock.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/prizm/http/GetBlock.java b/src/main/java/prizm/http/GetBlock.java
+--- a/src/main/java/prizm/http/GetBlock.java	(revision c0f2ba206e1df9970d6c0841a3737ec76732b496)
++++ b/src/main/java/prizm/http/GetBlock.java	(revision 054aea5680a1add921a10f545cbcc91258a0b381)
+@@ -96,12 +96,12 @@
+             JSONObject _responseGetBlock = JSONData.block(blockData, includeTransactions, includeExecutedPhased);
+             _mapgetblockH.put(heightValue, _responseGetBlock);
+             _mapgetblockI.put(blockValue, _responseGetBlock);
+-            if (_mapgetblockH.size() > _maxHMsizeMGB) {
+-                _mapgetblockH.remove(_mapgetblockH.firstEntry().getKey());
+-            }
+-            if (_mapgetblockI.size() > _maxHMsizeMGB) {
+-                _mapgetblockI.remove(_mapgetblockI.firstEntry().getKey());
+-            }
++//            if (_mapgetblockH.size() > _maxHMsizeMGB) {
++//                _mapgetblockH.remove(_mapgetblockH.firstEntry().getKey());
++//            }
++//            if (_mapgetblockI.size() > _maxHMsizeMGB) {
++//                _mapgetblockI.remove(_mapgetblockI.firstEntry().getKey());
++//            }
+             return _responseGetBlock;
+         } finally {
+             zanyatGetBlock = false;
+Index: src/main/java/prizmdesktop/WalletContextMenu.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/prizmdesktop/WalletContextMenu.java b/src/main/java/prizmdesktop/WalletContextMenu.java
+--- a/src/main/java/prizmdesktop/WalletContextMenu.java	(revision c0f2ba206e1df9970d6c0841a3737ec76732b496)
++++ b/src/main/java/prizmdesktop/WalletContextMenu.java	(revision 054aea5680a1add921a10f545cbcc91258a0b381)
+@@ -16,7 +16,7 @@
+ 
+ package prizmdesktop;
+ 
+-import com.sun.javafx.scene.control.ContextMenuContent;
++//import com.sun.javafx.scene.control.ContextMenuContent;
+ import javafx.event.EventHandler;
+ import javafx.scene.Node;
+ import javafx.scene.Parent;
+@@ -39,36 +39,36 @@
+ 
+     @Override
+     public void handle(ContextMenuEvent event) {
+-        @SuppressWarnings("deprecation")
++        //@SuppressWarnings("deprecation")
+         //final Iterator<Window> windows = Window.impl_getWindows(); // May not work in Java 9
+-        final ObservableList<Window> _windows = Window.getWindows(); // May not wo
+-        final Iterator<Window> windows = _windows.iterator();
+-        while (windows.hasNext()) {
+-            // access the context menu window
+-            final Window window = windows.next();
+-            if (window instanceof ContextMenu) {
+-                if (window.getScene() != null && window.getScene().getRoot() != null) {
+-                    Parent root = window.getScene().getRoot();
+-                    if (root.getChildrenUnmodifiable().size() > 0) {
+-                        Node popup = root.getChildrenUnmodifiable().get(0);
+-                        if (popup.lookup(".context-menu") != null) {
+-                            Node bridge = popup.lookup(".context-menu");
+-                            ContextMenuContent cmc = (ContextMenuContent) ((Parent) bridge).getChildrenUnmodifiable().get(0);
+-                            VBox itemsContainer = cmc.getItemsContainer();
+-                            for (Node node : itemsContainer.getChildren()) {
+-                                ContextMenuContent.MenuItemContainer item = (ContextMenuContent.MenuItemContainer)node;
+-                                if (item.getItem().getText().equals("Copy")) {
+-                                    return;
+-                                }
+-                            }
+-                            event.consume();
+-                            window.hide();
+-                            return;
+-                        }
+-                    }
+-                }
+-                return;
+-            }
+-        }
++//        final ObservableList<Window> _windows = Window.getWindows(); // May not wo
++//        final Iterator<Window> windows = _windows.iterator();
++//        while (windows.hasNext()) {
++//            // access the context menu window
++//            final Window window = windows.next();
++//            if (window instanceof ContextMenu) {
++//                if (window.getScene() != null && window.getScene().getRoot() != null) {
++//                    Parent root = window.getScene().getRoot();
++//                    if (root.getChildrenUnmodifiable().size() > 0) {
++//                        Node popup = root.getChildrenUnmodifiable().get(0);
++//                        if (popup.lookup(".context-menu") != null) {
++//                            Node bridge = popup.lookup(".context-menu");
++//                            ContextMenuContent cmc = (ContextMenuContent) ((Parent) bridge).getChildrenUnmodifiable().get(0);
++//                            VBox itemsContainer = cmc.getItemsContainer();
++//                            for (Node node : itemsContainer.getChildren()) {
++//                                ContextMenuContent.MenuItemContainer item = (ContextMenuContent.MenuItemContainer)node;
++//                                if (item.getItem().getText().equals("Copy")) {
++//                                    return;
++//                                }
++//                            }
++//                            event.consume();
++//                            window.hide();
++//                            return;
++//                        }
++//                    }
++//                }
++//                return;
++//            }
++//        }
+     }
+ }
+\ No newline at end of file
