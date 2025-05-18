@@ -8,7 +8,7 @@
 1. **Применение патча для Java 8**:  
    Выполните команду, чтобы адаптировать проект под Java 8:  
    ```bash
-   git apply j82.patch
+   git apply --ignore-whitespace j82.patch
 
 ### Пересборка проекта:
 
