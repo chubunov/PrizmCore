@@ -1,0 +1,296 @@
+Index: src/main/java/prizm/http/GetAccount.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/prizm/http/GetAccount.java b/src/main/java/prizm/http/GetAccount.java
+--- a/src/main/java/prizm/http/GetAccount.java	(revision d25e68af89a687f2eea44aa81e7afb74c8378a60)
++++ b/src/main/java/prizm/http/GetAccount.java	(date 1747579131506)
+@@ -85,9 +85,9 @@
+                 response.put("description", Convert.nullToEmpty(accountInfo.getDescription()));
+             }
+             _mapACC.put(accId, response);
+-            if (_mapACC.size() > _maxHMsizeAcc) {
+-                _mapACC.remove(_mapACC.firstEntry().getKey());
+-            }
++//            if (_mapACC.size() > _maxHMsizeAcc) {
++//                _mapACC.remove(_mapACC.firstEntry().getKey());
++//            }
+             return response;
+         } finally {
+             _zanatsetACC.remove(accId);
+Index: src/main/java/prizm/http/GetAccountLedger.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/prizm/http/GetAccountLedger.java b/src/main/java/prizm/http/GetAccountLedger.java
+--- a/src/main/java/prizm/http/GetAccountLedger.java	(revision d25e68af89a687f2eea44aa81e7afb74c8378a60)
++++ b/src/main/java/prizm/http/GetAccountLedger.java	(date 1747579131506)
+@@ -300,9 +300,9 @@
+         JSONObject response = new JSONObject();
+         response.put("entries", responseEntries);
+         _mapALedg.put(accountId, response);
+-            if (_mapALedg.size() > accountId) {
+-                _mapALedg.remove(_mapALedg.firstEntry().getKey());
+-            }
++//            if (_mapALedg.size() > accountId) {
++//                _mapALedg.remove(_mapALedg.firstEntry().getKey());
++//            }
+         return response;
+         }finally{
+             _zanatsetALedg.remove(accountId);    
+Index: src/main/java/prizm/http/GetBlock.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/prizm/http/GetBlock.java b/src/main/java/prizm/http/GetBlock.java
+--- a/src/main/java/prizm/http/GetBlock.java	(revision d25e68af89a687f2eea44aa81e7afb74c8378a60)
++++ b/src/main/java/prizm/http/GetBlock.java	(date 1747579131506)
+@@ -96,12 +96,12 @@
+             JSONObject _responseGetBlock = JSONData.block(blockData, includeTransactions, includeExecutedPhased);
+             _mapgetblockH.put(heightValue, _responseGetBlock);
+             _mapgetblockI.put(blockValue, _responseGetBlock);
+-            if (_mapgetblockH.size() > _maxHMsizeMGB) {
+-                _mapgetblockH.remove(_mapgetblockH.firstEntry().getKey());
+-            }
+-            if (_mapgetblockI.size() > _maxHMsizeMGB) {
+-                _mapgetblockI.remove(_mapgetblockI.firstEntry().getKey());
+-            }
++//            if (_mapgetblockH.size() > _maxHMsizeMGB) {
++//                _mapgetblockH.remove(_mapgetblockH.firstEntry().getKey());
++//            }
++//            if (_mapgetblockI.size() > _maxHMsizeMGB) {
++//                _mapgetblockI.remove(_mapgetblockI.firstEntry().getKey());
++//            }
+             return _responseGetBlock;
+         } finally {
+             zanyatGetBlock = false;
+Index: src/main/java/prizm/ParaEngine.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/prizm/ParaEngine.java b/src/main/java/prizm/ParaEngine.java
+--- a/src/main/java/prizm/ParaEngine.java	(revision d25e68af89a687f2eea44aa81e7afb74c8378a60)
++++ b/src/main/java/prizm/ParaEngine.java	(date 1747579131506)
+@@ -1674,18 +1674,7 @@
+             try (PreparedStatement values = conn.prepareStatement("set @value1 = ?")) {
+                 values.setLong(1, ID);
+                 values.executeUpdate();
+-            try (PreparedStatement statement = conn.prepareStatement("""
+-                                                                     WITH LINK(ID, PARENT_ID, LEVEL) AS (
+-                                                                         SELECT ID, PARENT_ID, 0 FROM PARA WHERE ID = @value1
+-                                                                         UNION ALL
+-                                                                         SELECT PARA.ID, PARA.PARENT_ID, LEVEL + 1
+-                                                                         FROM LINK INNER JOIN PARA ON LINK.PARENT_ID = PARA.ID AND LINK.LEVEL < 88
+-                                                                      )
+-                                                                      select
+-                                                                        link.id,
+-                                                                        link.parent_id,
+-                                                                        link.level
+-                                                                     from link""");
++            try (PreparedStatement statement = conn.prepareStatement("WITH LINK(ID, PARENT_ID, LEVEL) AS ( SELECT ID, PARENT_ID, 0 FROM PARA WHERE ID = @value1 UNION ALL SELECT PARA.ID, PARA.PARENT_ID, LEVEL + 1 FROM LINK INNER JOIN PARA ON LINK.PARENT_ID = PARA.ID AND LINK.LEVEL < 88 ) select link.id, link.parent_id, link.level from link");
+                     ResultSet rs = statement.executeQuery()) {
+                 while (rs.next()) {
+                     HeapStore item = new HeapStore(rs.getLong(1), rs.getLong(2), rs.getLong(3));
+Index: src/main/java/prizmdesktop/WalletContextMenu.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/prizmdesktop/WalletContextMenu.java b/src/main/java/prizmdesktop/WalletContextMenu.java
+--- a/src/main/java/prizmdesktop/WalletContextMenu.java	(revision d25e68af89a687f2eea44aa81e7afb74c8378a60)
++++ b/src/main/java/prizmdesktop/WalletContextMenu.java	(date 1747579131510)
+@@ -16,7 +16,7 @@
+ 
+ package prizmdesktop;
+ 
+-import com.sun.javafx.scene.control.ContextMenuContent;
++//import com.sun.javafx.scene.control.ContextMenuContent;
+ import javafx.event.EventHandler;
+ import javafx.scene.Node;
+ import javafx.scene.Parent;
+@@ -39,36 +39,36 @@
+ 
+     @Override
+     public void handle(ContextMenuEvent event) {
+-        @SuppressWarnings("deprecation")
++        //@SuppressWarnings("deprecation")
+         //final Iterator<Window> windows = Window.impl_getWindows(); // May not work in Java 9
+-        final ObservableList<Window> _windows = Window.getWindows(); // May not wo
+-        final Iterator<Window> windows = _windows.iterator();
+-        while (windows.hasNext()) {
+-            // access the context menu window
+-            final Window window = windows.next();
+-            if (window instanceof ContextMenu) {
+-                if (window.getScene() != null && window.getScene().getRoot() != null) {
+-                    Parent root = window.getScene().getRoot();
+-                    if (root.getChildrenUnmodifiable().size() > 0) {
+-                        Node popup = root.getChildrenUnmodifiable().get(0);
+-                        if (popup.lookup(".context-menu") != null) {
+-                            Node bridge = popup.lookup(".context-menu");
+-                            ContextMenuContent cmc = (ContextMenuContent) ((Parent) bridge).getChildrenUnmodifiable().get(0);
+-                            VBox itemsContainer = cmc.getItemsContainer();
+-                            for (Node node : itemsContainer.getChildren()) {
+-                                ContextMenuContent.MenuItemContainer item = (ContextMenuContent.MenuItemContainer)node;
+-                                if (item.getItem().getText().equals("Copy")) {
+-                                    return;
+-                                }
+-                            }
+-                            event.consume();
+-                            window.hide();
+-                            return;
+-                        }
+-                    }
+-                }
+-                return;
+-            }
+-        }
++//        final ObservableList<Window> _windows = Window.getWindows(); // May not wo
++//        final Iterator<Window> windows = _windows.iterator();
++//        while (windows.hasNext()) {
++//            // access the context menu window
++//            final Window window = windows.next();
++//            if (window instanceof ContextMenu) {
++//                if (window.getScene() != null && window.getScene().getRoot() != null) {
++//                    Parent root = window.getScene().getRoot();
++//                    if (root.getChildrenUnmodifiable().size() > 0) {
++//                        Node popup = root.getChildrenUnmodifiable().get(0);
++//                        if (popup.lookup(".context-menu") != null) {
++//                            Node bridge = popup.lookup(".context-menu");
++//                            ContextMenuContent cmc = (ContextMenuContent) ((Parent) bridge).getChildrenUnmodifiable().get(0);
++//                            VBox itemsContainer = cmc.getItemsContainer();
++//                            for (Node node : itemsContainer.getChildren()) {
++//                                ContextMenuContent.MenuItemContainer item = (ContextMenuContent.MenuItemContainer)node;
++//                                if (item.getItem().getText().equals("Copy")) {
++//                                    return;
++//                                }
++//                            }
++//                            event.consume();
++//                            window.hide();
++//                            return;
++//                        }
++//                    }
++//                }
++//                return;
++//            }
++//        }
+     }
+ }
+\ No newline at end of file
+Index: .gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+--- /dev/null	(date 1747579131506)
++++ b/.gitignore	(date 1747579131506)
+@@ -0,0 +1,4 @@
++/prizm_db/*
++.idea
++target
++logs
+\ No newline at end of file
+Index: dependency-reduced-pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/dependency-reduced-pom.xml b/dependency-reduced-pom.xml
+--- a/dependency-reduced-pom.xml	(revision d25e68af89a687f2eea44aa81e7afb74c8378a60)
++++ b/dependency-reduced-pom.xml	(date 1747579131506)
+@@ -82,9 +82,9 @@
+     </plugins>
+   </reporting>
+   <properties>
+-    <maven.compiler.target>17</maven.compiler.target>
+-    <maven.compiler.source>17</maven.compiler.source>
++    <maven.compiler.source>1.8</maven.compiler.source>
+     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
++    <maven.compiler.target>1.8</maven.compiler.target>
+   </properties>
+ </project>
+ 
+Index: pom.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/pom.xml b/pom.xml
+--- a/pom.xml	(revision d25e68af89a687f2eea44aa81e7afb74c8378a60)
++++ b/pom.xml	(date 1747579131506)
+@@ -12,8 +12,8 @@
+ 
+     <properties>
+         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+-        <maven.compiler.source>17</maven.compiler.source>
+-        <maven.compiler.target>17</maven.compiler.target>
++        <maven.compiler.source>1.8</maven.compiler.source>
++        <maven.compiler.target>1.8</maven.compiler.target>
+     </properties>
+ 
+     <dependencies>
+@@ -176,18 +176,18 @@
+         
+          <!-- APACHE FTP CLIENT -->
+        <!-- https://mvnrepository.com/artifact/commons-net/commons-net -->
+-        <dependency>
+-            <groupId>commons-net</groupId>
+-            <artifactId>commons-net</artifactId>
+-            <version>3.6</version>
+-        </dependency>
+-        <!-- new javafx dep -->
+-         <dependency>
+-            <groupId>org.openjfx</groupId>
+-            <artifactId>javafx-web</artifactId>
+-            <version>17.0.2</version>
+-            <type>jar</type>
+-        </dependency>
++<!--        <dependency>-->
++<!--            <groupId>commons-net</groupId>-->
++<!--            <artifactId>commons-net</artifactId>-->
++<!--            <version>3.6</version>-->
++<!--        </dependency>-->
++<!--        &lt;!&ndash; new javafx dep &ndash;&gt;-->
++<!--         <dependency>-->
++<!--            <groupId>org.openjfx</groupId>-->
++<!--            <artifactId>javafx-web</artifactId>-->
++<!--            <version>17.0.2</version>-->
++<!--            <type>jar</type>-->
++<!--        </dependency>-->
+         <!-- gsonmaper for loterry -->
+ 
+         
+Index: README.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/README.md b/README.md
+--- a/README.md	(revision d25e68af89a687f2eea44aa81e7afb74c8378a60)
++++ b/README.md	(date 1747579131506)
+@@ -1,4 +1,5 @@
+ # PrizmCore.v.1.10.4.7
++PrizmCore new version 1.10.4.7
+ 
+ What is Prizm?
+ -------------
+@@ -32,11 +33,11 @@
+ 
+ If you would like to validate that the binaries you download are exactly the same as those provided and built by the Prizm team, then you can compare your binaries to the following md5 hashes:
+ 
+-* Prizm Core [Windows](https://tech.prizm.vip/files/prizm-dist-1.10.4.7-win.exe) 4A63B93A590F031C9C1330603C278DA7
+-* Prizm Core [Linux](https://tech.prizm.vip/files/prizm-dist-1.10.4.7-linux.zip) 1A97D1F5D6A3EADAAD09C69DE1099E17
++* Prizm Core [Windows](https://tech.prizm.vip/files/prizm-dist-1.10.4.7-win.exe) 2C2B362D16AD79FA45396F754CC7AAD2
++* Prizm Core [Linux](https://tech.prizm.vip/files/prizm-dist-1.10.4.7-linux.zip) 5AB603C6FFF742156678B1E3CF5F1918
+ 
+ 
+-* [PrizmEngine 1.10.4.7](https://tech.prizm.vip/files/PrizmEngine.jar) 1D4125AC7E268534E5F57C6D55D85064
++* [PrizmEngine 1.10.4.7](https://tech.prizm.vip/files/PrizmEngine.jar) B5CD1C417D5BE602E0EB4D064EB02E7B
+ 
+ 
+ ### Precompiled distribution of the Prizm node mod
